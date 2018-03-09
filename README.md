@@ -24,18 +24,28 @@ Given the input below, generate one line per second with mean, min, max:
 ```
 
 ```
-tail -f log.json | jaggr @count=rps hist[200,502,*]:code min,max,mean:latency
+tail -f log.json | jaggr @count=rps hist[200,300,400,500]:code min,max,mean:latency
 ```
 
 Output will be on line per second as follow:
 
 ```
-{"count":123, "code": {"hist": {"200": 100, 502: 13, "*": 10}}, "latency":{"min": 4461000, "max": 5884000, "mean": 4483000}}
+{"rps":123, "code": {"hist": {"200": 100, "300": 0, "400": 0, "500": 13}}, "latency":{"min": 4461000, "max": 5884000, "mean": 4483000}}
 ```
 
 So here we give a stream of real-time requests to jaggr standard input and request the aggregation of the `code` and `latency` fields. For the `code` we request an histogram with some known error codes with an "other" bucket defined by `*`. The `latency` field is aggregated using minimum, maximum and mean. In addition, `@count` adds an extra field indicating the total number of lines aggregated. The `=` sign can be used on any field to rename it, here we use it to say that the count is an `rps` as we are using the default aggregation time of 1 second.
 
 Note that any field not specified in the argument list are removed from the output (i.e. `error` field).
+
+### Field Syntax
+
+A fields are JSON path prefixed with a list of aggregators. You can rename a field by suffixing it with `=<name>`. Here are some example of valid field declarations:
+
+* `median:latency`: Median computed for the latency field.
+* `median:latency=lat`: Same as above but the field is renamed `lat`.
+* `min,max,mean:latency`: Several aggregators applied to the `latency` field.
+* `median:timing.latency=latency`: Median of the sub-field latency of the `timing` JSON object renamed as top level `latency`.
+* `[100,200,300,400,500]hist:code`: Code counted into bucket of 100s.
 
 ### Aggregators
 
