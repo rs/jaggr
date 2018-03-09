@@ -13,6 +13,26 @@ import (
 )
 
 func main() {
+	flag.Usage = func() {
+		out := flag.CommandLine.Output()
+		fmt.Fprintln(out, "Usage: jaggr [OPTIONS] FIELD_DEF [FIELD_DEF...]:")
+		fmt.Fprintln(out, "")
+		fmt.Fprintln(out, "OPTIONS:")
+		flag.PrintDefaults()
+		fmt.Fprintln(out, "")
+		fmt.Fprintln(out, "FIELD_DEF: <aggr>[,<aggr>...]:path[=alias]")
+		fmt.Fprintln(out, "  aggr:")
+		fmt.Fprintln(out, "    - min, max, mean: Computes the min, max, mean of the field's values during the sample interval.")
+		fmt.Fprintln(out, "    - median, p#: The p1 to p99 compute the percentile of the field's values during the sample interval.")
+		fmt.Fprintln(out, "    - sum: Sum all values for the field.")
+		fmt.Fprintln(out, "    - [bucket1,bucketN]hist: Count number of values between bucket and bucket+1.")
+		fmt.Fprintln(out, "    - [bucket1,bucketN]cat: Count number of values equal to the define buckets (can be non-number values). The special `*` matches values that fit in none of the defined buckets.")
+		fmt.Fprintln(out, "  path:")
+		fmt.Fprintln(out, "    JSON field path (eg: field.sub-field).")
+		fmt.Fprintln(out, "  alias:")
+		fmt.Fprintln(out, "    Optional name to use instead of the field path on the output.")
+	}
+	interval := flag.Duration("interval", time.Second, "Sampling interval")
 	flag.Parse()
 	fields, err := aggr.NewFields(flag.Args())
 	if err != nil {
@@ -20,7 +40,7 @@ func main() {
 	}
 
 	go func() {
-		t := time.NewTicker(time.Second)
+		t := time.NewTicker(*interval)
 		for range t.C {
 			b, err := json.Marshal(fields.Aggr())
 			if err != nil {
