@@ -37,7 +37,7 @@ func (p *aggrsParser) parse() (map[string]Aggregator, error) {
 		var err error
 		aggrs[name], err = aggr(args)
 		if err != nil {
-			return nil, fmt.Errorf("%s: %v", err)
+			return nil, fmt.Errorf("%s: %v", name, err)
 		}
 		if !p.expect(',') {
 			break
