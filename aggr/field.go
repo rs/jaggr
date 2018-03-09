@@ -16,11 +16,13 @@ type Field struct {
 	Aggrs map[string]Aggregator
 }
 
+// Fields holds a set of aggregation fields
 type Fields struct {
 	f  []Field
 	mu sync.Mutex
 }
 
+// NewFields parses defs and create aggregation fields.
 func NewFields(defs []string) (*Fields, error) {
 	fields := make([]Field, 0, len(defs))
 	for _, def := range defs {
@@ -33,6 +35,7 @@ func NewFields(defs []string) (*Fields, error) {
 	return &Fields{f: fields}, nil
 }
 
+// Push pushes new pre-parsed JSON data to the aggregations.
 func (fs *Fields) Push(jq *gojq.JQ) error {
 	fs.mu.Lock()
 	defer fs.mu.Unlock()
@@ -44,6 +47,7 @@ func (fs *Fields) Push(jq *gojq.JQ) error {
 	return nil
 }
 
+// Aggr gets and flush aggregated data.
 func (fs *Fields) Aggr() map[string]interface{} {
 	fs.mu.Lock()
 	defer fs.mu.Unlock()
@@ -89,6 +93,7 @@ func NewField(def string) (Field, error) {
 	return f, nil
 }
 
+// Push pushes new pre-parsed JSON data to the aggregations.
 func (f *Field) Push(jq *gojq.JQ) error {
 	v, err := jq.Query(f.Path)
 	if err != nil {
@@ -102,6 +107,7 @@ func (f *Field) Push(jq *gojq.JQ) error {
 	return nil
 }
 
+// Aggr gets and flush aggregated data.
 func (f *Field) Aggr() interface{} {
 	if f.Path == "." && f.Aggrs[""] != nil {
 		// Count special field

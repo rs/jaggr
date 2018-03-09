@@ -1,3 +1,4 @@
+// Package aggr provides aggregation primitives for jaggr.
 package aggr
 
 import (
