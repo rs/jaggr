@@ -14,7 +14,7 @@ import (
 
 func main() {
 	flag.Usage = func() {
-		out := flag.CommandLine.Output()
+		out := os.Stderr
 		fmt.Fprintln(out, "Usage: jaggr [OPTIONS] FIELD_DEF [FIELD_DEF...]:")
 		fmt.Fprintln(out, "")
 		fmt.Fprintln(out, "OPTIONS:")
