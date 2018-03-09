@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"strings"
 	"sync"
-
-	"github.com/elgs/gojq"
 )
 
 // Field describe an aggregation on a field.
@@ -20,6 +18,11 @@ type Field struct {
 type Fields struct {
 	f  []Field
 	mu sync.Mutex
+}
+
+// Querier is used to query data using JSON path.
+type Querier interface {
+	Query(exp string) (interface{}, error)
 }
 
 // NewFields parses defs and create aggregation fields.
@@ -36,11 +39,11 @@ func NewFields(defs []string) (*Fields, error) {
 }
 
 // Push pushes new pre-parsed JSON data to the aggregations.
-func (fs *Fields) Push(jq *gojq.JQ) error {
+func (fs *Fields) Push(q Querier) error {
 	fs.mu.Lock()
 	defer fs.mu.Unlock()
 	for _, f := range fs.f {
-		if err := f.Push(jq); err != nil {
+		if err := f.Push(q); err != nil {
 			return err
 		}
 	}
@@ -94,8 +97,8 @@ func NewField(def string) (Field, error) {
 }
 
 // Push pushes new pre-parsed JSON data to the aggregations.
-func (f *Field) Push(jq *gojq.JQ) error {
-	v, err := jq.Query(f.Path)
+func (f *Field) Push(q Querier) error {
+	v, err := q.Query(f.Path)
 	if err != nil {
 		return err
 	}
