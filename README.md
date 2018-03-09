@@ -53,6 +53,7 @@ Available aggregators:
 
 * `min`, `max`, `mean`: Computes the min, max, mean of the field's values during the sample interval.
 * `median`, `p#`: The p1 to p99 compute the percentile of the field's values during the sample interval.
+* `sum`: Sum all values for the field.
 * `[bucket1,bucketN]hist`: Count number of values between bucket and bucket+1.
 * `[bucket1,bucketN]cat`: Count number of values equal to the define buckets (can be non-number values). The special `*` matches values that fit in none of the defined buckets.
 
@@ -64,16 +65,15 @@ Jaggr can be used to integrate [vegeta](https://github.com/tsenart/vegeta) with 
 
 ```
 echo 'GET http://localhost:8080' | \
-    vegeta attack -rate 5000 -workers 100 -duration 10m | vegeta dump | \
+    vegeta attack -rate 5000 -duration 10m | vegeta dump | \
     jaggr @count=rps \
-          hist[100,200,300,400,500]:code \
+          hist\[100,200,300,400,500\]:code \
           p25,p50,p95:latency \
-          p25,p50,p95:bytes_in \
-          p25,p50,p95:bytes_out | \
+          sum:bytes_in \
+          sum:bytes_out | \
     jplot rps+code.hist.100+code.hist.200+code.hist.300+code.hist.400+code.hist.500 \
           latency.p95+latency.p50+latency.p25 \
-          bytes_in.p95+bytes_in.p50+bytes_in.p25 \
-          bytes_out.p95+bytes_out.p50+bytes_out.p25
+          bytes_in.sum+bytes_out.sum
 ```
 
 ![](doc/vegeta.gif)

@@ -13,6 +13,7 @@ func init() {
 	Register("max", newMax)
 	Register("mean", newMean)
 	Register("median", newMedian)
+	Register("sum", newSum)
 	Register("hist", newHist)
 	Register("cat", newCat)
 	for i := 1; i < 100; i++ {
