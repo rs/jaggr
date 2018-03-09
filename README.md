@@ -37,6 +37,15 @@ So here we give a stream of real-time requests to jaggr standard input and reque
 
 Note that any field not specified in the argument list are removed from the output (i.e. `error` field).
 
+### Aggregators
+
+Available aggregators:
+
+* `min`, `max`, `mean`: Computes the min, max, mean of the field's values during the sample interval.
+* `median`, `p#`: The p1 to p99 compute the percentile of the field's values during the sample interval.
+* `[bucket1,bucketN]hist`: Count number of values between bucket and bucket+1.
+* `[bucket1,bucketN]cat`: Count number of values equal to the define buckets (can be non-number values). The special `*` matches values that fit in none of the defined buckets.
+
 ## Recipes
 
 ### Vegeta
@@ -44,7 +53,7 @@ Note that any field not specified in the argument list are removed from the outp
 Jaggr can be used to integrate [vegeta](https://github.com/tsenart/vegeta) with [jplot](https://github.com/rs/jplot) as follow:
 
 ```
-echo 'GET http://localhost' | \
+echo 'GET http://localhost:8080' | \
     vegeta attack -rate 5000 -workers 100 -duration 10m | vegeta dump | \
     jaggr @count=rps \
           hist[100,200,300,400,500]:code \
