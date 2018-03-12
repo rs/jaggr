@@ -34,6 +34,12 @@ func main() {
 	}
 	interval := flag.Duration("interval", time.Second, "Sampling interval")
 	flag.Parse()
+
+	if len(flag.Args()) == 0 {
+		flag.Usage()
+		os.Exit(1)
+	}
+
 	fields, err := aggr.NewFields(flag.Args())
 	if err != nil {
 		fatal("invalid argument: ", err)
