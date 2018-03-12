@@ -8,12 +8,14 @@ matrix:
   allow_failures:
   - go: master
 script: go test -v -race -cpu=1,2,4 -bench . -benchmem ./...
-before_deploy: ./release
 deploy:
-  provider: releases
-  file_glob: true
-  file: dist/*
+- provider: script
+  skip_cleanup: true
+  script: curl -sL http://git.io/goreleaser | bash
   on:
     tags: true
-  api_key:
-    secure: IkUIPzZ9Nml4dGl6sQH1je0snBe2939+liuAB1IqUTNx+0mlMBC9cSHaHT+5BGL5G1QS31QcgW8jwcdspmHDZTPYkj9tw+GvGIs2nydjruqnhtRdoTeVzRRffZZVqdh1ktao4coZtNam5YlrgWvePhIm6kIYVMBcEgWff+a1/Uw9E3j+Aceo0LA/vrWdjUMNkN+qnKpF5TsNIMDXEwlukWEG1qdQgJZeNMcs/0WgZVrAx0wFsW3kQNdIynbMdY99K2VO90li3D+kSMQquYdcRBaU/ebpP+7mQ9OKTujxCuzU3IWoi05+EtmCDCp24ezL03fcF0UbITz6ORtHv67x36eTie+uXBWOPypiigNzGdtnRV6j2c1PmCxIoReiaLTbtUS9Unl8+87o9WXu0A/oCcN94fN4J19W19LR4npUai+OrrSYJYA8KaORcX//C5jZKcFYK0dFny/nd2sGhCyK81jJsR5Fmp5ePfZ4lhzDS4DrwD+BBO3ulvhmBysX+0tjg5VAKb/2lzZup/dk8Oswco0yi/NOUhf+Nitx9ExAW/ST1qvo7b6V3D8Vq+yXW4FfGheRwF72XzUOpusFdOHVtdShH9lL18Hvv6CUAxv/UjVL6NiCTjXKaKJazmcGbhwTVJOVUG7OmKPDfhmUC6SxhReYkawR3vAyBr8mKHveZD8=
+    condition: "$TRAVIS_OS_NAME = linux && $TRAVIS_GO_VERSION = '1.10'"
+env:
+  global:
+    # travis encrypt --add GITHUB_TOKEN=$GITHUB_TOKEN
+    secure: JIsGOJapsU/oSyZX6fyCC+s8Jjlmmr7SAlP55KhUi1pZbQ18Saszs/zRo5Og+wPtwj5teikcSSYec9ZyuLnDX/j6N0LMkSMSldSCgR2lv9uQI1zmtUMjYTI44f9LgtHN6JvTjiH6zxW5HSZJta+4p6LjpxOYaUhA4A5FPGSHs6MF/kXtgA0ufc640GMzTrFcBrnVN4DXR1UlAqMnt9lQ2FgI+rJ1PfVDoho6m2Uz7XGsarYQSTm/l2sfEkNtCJjKDLEc0tEYCuCUUPnbhaJgQIlTpCo03dR30CoSArkkagNWfSYcKwoV+bBryHK08GNHvXtm3LarRPDe8MdN0a4TwC26boUjYtQfrabI0Q7d1EhpXGSL0dNVwiakK76xwOi8b3UfBog5I3fB2u7R0HsiLhxQzf1GMTS6Vx41xAByomGMcXfg6pCxZ5Q/l2Xs/IepC6xMWHyTvFV8EDnRaECHJNPZPXdhvGSOzGOsRWM+eVcC8k67YovTS9bzcaVEMFDZ+5SO91YX2dKstUhEt6T/b6pRktc0+herk4iUicMT9E9G1I/l9Zyz6reFW3XioPqt53uYq5O3jB4rDmbgiPdPKdayrufXZtV15GLTEG5AhVfG5/u/zafrHkzLftWLu23gLVfWLQ5CmpbFp2wZl4tYH+7uMKGFFWuX8ZkllojqozI=

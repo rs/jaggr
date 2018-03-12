@@ -10,7 +10,7 @@ Direct downloads are available through the [releases page](https://github.com/rs
 Using [homebrew](http://brew.sh/) on macOS (Go not required):
 
 ```
-brew install https://github.com/rs/jaggr/releases/latest/homebrew.rb
+brew install rs/tap/jaggr
 ```
 
 From source:

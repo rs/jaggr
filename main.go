@@ -12,6 +12,8 @@ import (
 	"github.com/rs/jaggr/aggr"
 )
 
+var version = "master"
+
 func main() {
 	flag.Usage = func() {
 		out := os.Stderr
@@ -32,8 +34,14 @@ func main() {
 		fmt.Fprintln(out, "  alias:")
 		fmt.Fprintln(out, "    Optional name to use instead of the field path on the output.")
 	}
+	showVersion := flag.Bool("version", false, "Show version")
 	interval := flag.Duration("interval", time.Second, "Sampling interval")
 	flag.Parse()
+
+	if *showVersion {
+		println(version)
+		os.Exit(0)
+	}
 
 	if len(flag.Args()) == 0 {
 		flag.Usage()

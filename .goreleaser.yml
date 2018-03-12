@@ -1,0 +1,28 @@
+project_name: jaggr
+builds:
+-
+  env:
+  - CGO_ENABLED=0
+  goos:
+  - darwin
+  - linux
+  - freebsd
+  - windows
+git:
+  short_hash: true
+brew:
+  github:
+    owner: rs
+    name: homebrew-tap
+  commit_author:
+    name: Olivier Poitrey
+    email: rs@rhapsodyk.net
+  homepage: https://github.com/rs/jaggr
+  description: JSON Aggregation CLI
+# snapcraft:
+#   summary: JSON Aggregation CLI
+#   grade: stable
+#   confinement: strict
+
+release:
+  name_template: "{{.ProjectName}}-v{{.Version}}"
