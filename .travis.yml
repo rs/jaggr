@@ -1,11 +1,19 @@
 language: go
 go:
-- "1.8"
-- "1.9"
-- "1.10"
+- '1.8'
+- '1.9'
+- '1.10'
 - master
 matrix:
   allow_failures:
-      - go: master
-script:
-  go test -v -race -cpu=1,2,4 -bench . -benchmem ./...
+  - go: master
+script: go test -v -race -cpu=1,2,4 -bench . -benchmem ./...
+before_deploy: ./release
+deploy:
+  provider: releases
+  file_glob: true
+  file: dist/*
+  on:
+    tags: true
+  api_key:
+    secure: IkUIPzZ9Nml4dGl6sQH1je0snBe2939+liuAB1IqUTNx+0mlMBC9cSHaHT+5BGL5G1QS31QcgW8jwcdspmHDZTPYkj9tw+GvGIs2nydjruqnhtRdoTeVzRRffZZVqdh1ktao4coZtNam5YlrgWvePhIm6kIYVMBcEgWff+a1/Uw9E3j+Aceo0LA/vrWdjUMNkN+qnKpF5TsNIMDXEwlukWEG1qdQgJZeNMcs/0WgZVrAx0wFsW3kQNdIynbMdY99K2VO90li3D+kSMQquYdcRBaU/ebpP+7mQ9OKTujxCuzU3IWoi05+EtmCDCp24ezL03fcF0UbITz6ORtHv67x36eTie+uXBWOPypiigNzGdtnRV6j2c1PmCxIoReiaLTbtUS9Unl8+87o9WXu0A/oCcN94fN4J19W19LR4npUai+OrrSYJYA8KaORcX//C5jZKcFYK0dFny/nd2sGhCyK81jJsR5Fmp5ePfZ4lhzDS4DrwD+BBO3ulvhmBysX+0tjg5VAKb/2lzZup/dk8Oswco0yi/NOUhf+Nitx9ExAW/ST1qvo7b6V3D8Vq+yXW4FfGheRwF72XzUOpusFdOHVtdShH9lL18Hvv6CUAxv/UjVL6NiCTjXKaKJazmcGbhwTVJOVUG7OmKPDfhmUC6SxhReYkawR3vAyBr8mKHveZD8=

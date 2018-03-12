@@ -5,6 +5,16 @@ Jaggr is a command line tool to aggregate in real time a series of JSON logs. Th
 
 ## Install
 
+Direct downloads are available through the [releases page](https://github.com/rs/jaggr/releases/latest).
+
+Using [homebrew](http://brew.sh/) on macOS (Go not required):
+
+```
+brew install https://github.com/rs/jaggr/releases/latest/homebrew.rb
+```
+
+From source:
+
 ```
 go get -u github.com/rs/jaggr
 ```
