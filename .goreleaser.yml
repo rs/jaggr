@@ -1,28 +1,40 @@
 project_name: jaggr
+before:
+  hooks:
+    - go mod tidy
+    - go generate ./...
 builds:
--
-  env:
-  - CGO_ENABLED=0
-  goos:
-  - darwin
-  - linux
-  - freebsd
-  - windows
-git:
-  short_hash: true
-brew:
-  github:
-    owner: rs
-    name: homebrew-tap
-  commit_author:
-    name: Olivier Poitrey
-    email: rs@rhapsodyk.net
-  homepage: https://github.com/rs/jaggr
-  description: JSON Aggregation CLI
-# snapcraft:
-#   summary: JSON Aggregation CLI
-#   grade: stable
-#   confinement: strict
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - linux
+      - freebsd
+      - windows
+    goarch:
+      - amd64
+      - arm
+      - arm64
+    goamd64:
+      - v1
+      - v2
+      - v3
+universal_binaries:
+  - 
+    name_template: '{{.ProjectName}}'
+brews:
+  - goarm: 7
+    goamd64: v2
+    tap:
+      owner: rs
+      name: homebrew-tap
+      branch: main
+    commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
+    commit_author:
+      name: Olivier Poitrey
+      email: rs@rhapsodyk.net
+    homepage: https://github.com/rs/jaggr
+    description: JSON Aggregation CLI
 
 release:
   name_template: "{{.ProjectName}}-v{{.Version}}"

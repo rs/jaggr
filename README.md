@@ -16,7 +16,7 @@ brew install rs/tap/jaggr
 From source:
 
 ```
-go get -u github.com/rs/jaggr
+go install github.com/rs/jaggr@latest
 ```
 
 ## Usage
