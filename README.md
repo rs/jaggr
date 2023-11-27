@@ -75,7 +75,7 @@ Jaggr can be used to integrate [vegeta](https://github.com/tsenart/vegeta) with 
 
 ```
 echo 'GET http://localhost:8080' | \
-    vegeta attack -rate 5000 -duration 10m | vegeta dump | \
+    vegeta attack -rate 5000 -duration 10m | vegeta encode | \
     jaggr @count=rps \
           hist\[100,200,300,400,500\]:code \
           p25,p50,p95:latency \
