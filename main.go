@@ -3,8 +3,10 @@ package main
 import (
 	"bufio"
 	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"os"
 	"time"
 
@@ -64,9 +66,17 @@ func main() {
 		}
 	}()
 
-	s := bufio.NewScanner(os.Stdin)
-	for s.Scan() {
-		jq, err := gojq.NewStringQuery(s.Text())
+	r := bufio.NewReader(os.Stdin)
+	for {
+		line, err := r.ReadString('\n')
+		if errors.Is(err, io.EOF) {
+			break
+		}
+		if err != nil {
+			fatal("reading input: ", err)
+		}
+
+		jq, err := gojq.NewStringQuery(line)
 		if err != nil {
 			fatal("invalid input: ", err)
 		}
